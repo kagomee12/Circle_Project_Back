@@ -27,7 +27,7 @@ export const uploadCloudinary = async (
   if (!file && files.length < 1) {
    console.log("No file uploaded");
    
-    return res.send("No file uploaded");
+    return next();
   }
 
   if (file) {
