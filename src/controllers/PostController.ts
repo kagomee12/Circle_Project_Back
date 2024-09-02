@@ -24,10 +24,12 @@ export const findByUserId = async (req: Request, res: Response) => {
 
 export const create = async (req: Request, res: Response) => {
    try {
+      console.log("test");
+      
       await createPostSchema.validateAsync(req.body);
       
-      if (req.files) {
-         req.body.images = req.files;
+      if (res.locals.image) {
+         req.body.images = res.locals.image;
       }
 
       const user_id = res.locals.user.id;
@@ -40,6 +42,8 @@ export const create = async (req: Request, res: Response) => {
       });
    } catch (error) {
       errorHandler(res, error as unknown as Error);
+      console.log(error);
+      
    }
 };
 
