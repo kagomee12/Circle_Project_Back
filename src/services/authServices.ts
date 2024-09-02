@@ -54,8 +54,8 @@ export const register = async (user: IUser): Promise<User | null> => {
         if (existedUser) {
             throw new Error("User already exists")
         }
-
         const hashingpassword =await bcrypt.hash(user.password, 10);
+
         user.password = hashingpassword;
 
         const newUser = await db.user.create({

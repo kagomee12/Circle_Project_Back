@@ -1,7 +1,7 @@
-import { profile } from "console";
+import { log, profile } from "console";
 import * as authservices from "../services/authServices"
 import { IUser } from "../types/auth";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -23,8 +23,11 @@ export const login = async (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response) => {
     try {
        const body = req.body;
-       
+       console.log(body);
+
        const user = await authservices.register(body as IUser);
+       
+       
 
        return res.status(201).json(user);
 
