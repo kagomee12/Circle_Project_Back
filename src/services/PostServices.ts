@@ -51,14 +51,39 @@ export const findById = async (id: number) => {
       },
    });
 };
-
+export const findimagesById = async (user_id: number) => {
+   return await db.posts.findMany({
+      where: {
+         user_id: user_id,
+         images: {
+           some: {}, 
+         },
+         parent_id: null
+       },
+      include: {
+         author: {
+            select: {
+               id: true,
+               username: true,
+               fullName: true,
+               profil_pic: true,
+               likes: true,
+               
+            },
+         },
+         comments: true,
+         images: true
+         
+      },
+   });
+};
 export const create = async (post: IPosts) => {
    const newPost = await db.posts.create({
       data: {
          ...post,
          
          images: {
-            create: post.images?.map((image) => ({ image: image.filename })),
+            create: post.images && post.images.map((image) => ({ image: image.filename })),
          },
          
       },
@@ -80,18 +105,20 @@ export const update = async (id: number, post: PostModels) => {
    return updatedPost;
 };
 
-export const remove = async (id: number) => {
+export const remove = async (post_Id: number) => {
    const deletedPost = await db.posts.findFirst({
-      where: { id },
+      where: {id: post_Id },
 
    })
 
-   await db.postImage.deleteMany({ where: { id : id } });
-   await db.posts.deleteMany({ where: { id : id } });
+   await db.likes.deleteMany({ where: { post_id: post_Id } });
 
-   
-   // await db.posts.deleteMany({ where: { id: id },
-   // });
+   await db.postImage.deleteMany({ where: { post_id: post_Id } });
+
+   await db.posts.deleteMany({ where: { parent_id: post_Id } });
+ 
+   await db.posts.deleteMany({ where: { id: post_Id } });
+
 
    return "deleted";
 };

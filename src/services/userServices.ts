@@ -8,6 +8,16 @@ export const getAllUsers = async () => {
             }
     });
 }
+export const getSearchUsers = async (username: string) => {
+    return await db.user.findMany({
+        where: {
+            username: {
+                contains: username,
+                mode: "insensitive"
+            }
+        }
+    });
+}
 
 export const getUserById = async (id: number) => {
     return await db.user.findFirst({ where: { id }, 
@@ -38,3 +48,14 @@ export const getUserByusername = async (username: string) => {
         }
     )
 }
+
+export const updateUser = async (id: number, data: User) => {
+    return await db.user.update({data: {
+        banner_pic: data.banner_pic,
+        profil_pic: data.profil_pic,
+        fullName: data.fullName,
+        username: data.username,
+        bio: data.bio
+    } ,where: { id } });
+}
+

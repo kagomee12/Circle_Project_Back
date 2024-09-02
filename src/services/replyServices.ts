@@ -1,6 +1,7 @@
 import { PostModels } from "../models/PostModels";
 import db from "../libs/db";
 import { Posts } from "@prisma/client";
+import { IPosts } from "../types/post";
 
 const posts: PostModels[] = [];
 
@@ -39,8 +40,17 @@ export const findById = async (id: number) => {
    });
 };
 
-export const create = async (post: Posts) => {
-   const newPost = await db.posts.create({ data: post });
+export const create = async (post: IPosts) => {
+   const newPost = await db.posts.create({
+      data: {
+         ...post,
+         
+         images: {
+            create: post.images && post.images.map((image) => ({ image: image.filename })),
+         },
+         
+      },
+   });
 
    return newPost;
 };

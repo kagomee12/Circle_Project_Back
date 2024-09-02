@@ -7,6 +7,7 @@ const postRoute = Router();
 postRoute.get("/", postController.findAll);
 
 postRoute.get("/:id", postController.findById);
+postRoute.get("/images/:user_id", postController.findImagesById);
 postRoute.get("/user/:user_id", authorization, postController.findByUserId);
 
 

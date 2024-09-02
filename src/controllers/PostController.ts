@@ -2,7 +2,6 @@ import { createPostSchema } from "../libs/validations/post";
 import * as postService from "../services/PostServices";
 import { Request, Response } from "express";
 import errorHandler from "../utils/errorHandler";
-import { log } from "console";
 
 export const findAll = async (req: Request, res: Response) => {
    const posts = await postService.findAll();
@@ -12,7 +11,11 @@ export const findAll = async (req: Request, res: Response) => {
 
 export const findById = async (req: Request, res: Response) => {
    const post = await postService.findById(parseInt(req.params.id));
-   res.json(post);
+   return res.json(post);
+};
+export const findImagesById = async (req: Request, res: Response) => {
+   const post = await postService.findimagesById(parseInt(req.params.user_id));
+   return res.json(post);
 };
 export const findByUserId = async (req: Request, res: Response) => {
    const post = await postService.findByIdUser(parseInt(req.params.user_id));
@@ -40,17 +43,16 @@ export const create = async (req: Request, res: Response) => {
    }
 };
 
-export const update = (req: Request, res: Response) => {
-   const post = postService.update(parseInt(req.params.id), req.body);
+export const update = async (req: Request, res: Response) => {
+   const post = await postService.update(parseInt(req.params.id), req.body);
    res.json(post);
 };
 
-export const remove = (req: Request, res: Response) => {
+export const remove = async (req: Request, res: Response) => {
    try {
 
-      const post = postService.remove(parseInt(req.params.id));
+   const post = await postService.remove(parseInt(req.params.id));
    res.json(post);
-   console.log(post);
    } catch (error) {
       errorHandler(res, error as unknown as Error);
    }

@@ -59,22 +59,63 @@ export const getFollowing = async (followerId: number, followingId: number) => {
             followerId: followerId,
             followingId: followingId
             
+        },include: {
+            followers:{
+                select:{
+                    fullName: true,
+                    username: true,
+                    bio: true,
+                    profil_pic: true,
+                    banner_pic: true,
+                }
+            },following:{
+                select:{
+                    fullName: true,
+                    username: true,
+                    bio: true,
+                    profil_pic: true,
+                    banner_pic: true,
+                }
+            }
         }
     })
 }
 
-export const countFollower = async (followerId: number) => {
+
+export const countFollowing = async (followerId: number) => {
     return await db.follow.findMany({
         where: {
             followerId: followerId
+        },include:{
+            following:{
+                select:{
+                    fullName: true,
+                    username: true,
+                    bio: true,
+                    profil_pic: true,
+                    banner_pic: true,
+                }
+            }
         }
     })
 }
 
-export const countFollowing = async (followingId: number) => {
+export const countFollower = async (followingId: number) => {
     return await db.follow.findMany({
         where: {
             followingId: followingId
+        },
+            include:{
+                followers:{
+                    select:{
+                        fullName: true,
+                        username: true,
+                        bio: true,
+                        profil_pic: true,
+                        banner_pic: true,
+                    }
+                }
+            
         }
     })
 }

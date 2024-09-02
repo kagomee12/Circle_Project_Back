@@ -10,8 +10,8 @@ repliesRoute.get("/count/:id", replyController.countById)
 
 repliesRoute.post(
    "/:post_id",
+   upload.array("image"),
    authorization,
-   upload.single("image"),
    replyController.create
 );
 

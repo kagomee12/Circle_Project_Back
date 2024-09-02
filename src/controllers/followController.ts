@@ -7,9 +7,6 @@ export const follow = async (req: Request, res: Response) => {
     try {
     const  followerId  = res.locals.user.id;
     const { followingId } = req.params;
-    req.body.followerId = parseInt(followerId);
-    req.body.followingId = followingId;
-    console.log(req.body);
     
     if (followerId == followingId) {
         return res.status(400).json({ message: 'You cannot follow yourself' });
@@ -51,7 +48,7 @@ export const getFollowersById = async (req: Request, res: Response) => {
 export const getCountfollowing = async (req: Request, res: Response) => {
     const {followingId} = req.params
     const Id = parseInt(followingId)
-    const following = await followService.countFollower(Id)
+    const following = await followService.countFollowing(Id)
 
     if (following) {
     const FOLLOWING =  following.length
@@ -66,7 +63,7 @@ export const getCountfollowing = async (req: Request, res: Response) => {
 export const getCountfollower = async (req: Request, res: Response) => {
     const {followerId} = req.params
     const Id = parseInt(followerId)
-    const following = await followService.countFollowing(Id)
+    const following = await followService.countFollower(Id)
 
     if (following) {
     const FOLLOWING =  following.length
@@ -78,3 +75,30 @@ export const getCountfollower = async (req: Request, res: Response) => {
     }
     
 }
+
+export const getInfofollowing = async (req: Request, res: Response) => {
+    try {
+    const {followingId} = req.params;
+    const FollowingId = parseInt(followingId)
+    
+    const foll = await followService.countFollowing(FollowingId)
+
+    res.json(foll)
+    } catch (error) {
+        errorHandler(res, error as unknown as Error); 
+    }
+}
+
+export const getInfofollower = async (req: Request, res: Response) => {
+    try {
+    const {followerId} = req.params;
+    const FollowerId = parseInt(followerId)
+    
+    const foll = await followService.countFollower(FollowerId)
+
+    res.json(foll)
+    } catch (error) {
+        errorHandler(res, error as unknown as Error); 
+    }
+}
+

@@ -22,6 +22,7 @@ export const countById = async (req: Request, res: Response) => {
 
 export const create = async (req: Request, res: Response) => {
    try {
+
       await createPostSchema.validateAsync(req.body);
       
       if (req.files) {
@@ -32,6 +33,8 @@ export const create = async (req: Request, res: Response) => {
       const user_id = res.locals.user.id;
       req.body.user_id = user_id;
       req.body.parent_id = post_id;
+
+
 
       const post = await replyService.create(req.body);
       res.json({
@@ -48,15 +51,13 @@ export const update = (req: Request, res: Response) => {
    res.json(post);
 };
 
-export const remove = (req: Request, res: Response) => {
+export const remove = async (req: Request, res: Response) => {
    try {
 
-      const post = replyService.remove(parseInt(req.params.id));
+      const post = await replyService.remove(parseInt(req.params.id));
 
    res.json(post);
-   console.log(post);
    } catch (error) {
       errorHandler(res, error as unknown as Error);
    }
 };
-
