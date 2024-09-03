@@ -21,7 +21,7 @@ export const uploadCloudinary = async (
   res: Response,
   next: NextFunction
 ) => {
-console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET);
+console.log( req?.files, req?.file);
 
   const file: CloudinaryFile = req.file as CloudinaryFile;
   const files: CloudinaryFile[] = req.files as CloudinaryFile[];
