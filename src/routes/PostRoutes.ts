@@ -15,7 +15,7 @@ postRoute.get("/user/:user_id", authorization, postController.findByUserId);
 postRoute.post(
    "/",
    authorization,
-   upload.array("image", 5),
+   upload.array("files", 5),
    uploadCloudinary,
    postController.create
 );
