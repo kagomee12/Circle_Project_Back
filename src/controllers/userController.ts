@@ -37,10 +37,10 @@ export const updateUser = async (req: Request, res: Response) => {
     try {
         if (res.locals.image) {
             if ('profil_pic' in res.locals.image) {
-                req.body.profil_pic = (res.locals.image['profil_pic'] as Express.Multer.File[])[0].filename;
+                req.body.profil_pic = (res.locals.image['profil_pic'] );
             }
             if ('banner_pic' in res.locals.image) {
-                req.body.banner_pic = (res.locals.image['banner_pic'] as Express.Multer.File[])[0].filename;
+                req.body.banner_pic = (res.locals.image['banner_pic']);
             }
         }
 

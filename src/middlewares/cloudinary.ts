@@ -4,6 +4,7 @@ import {
   UploadApiErrorResponse,
 } from "cloudinary";
 import { NextFunction, Request, Response } from "express";
+import { env } from "process";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -20,24 +21,22 @@ export const uploadCloudinary = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("uploading");
+  console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET);
 
   const file: CloudinaryFile = req.file as CloudinaryFile;
   const files: CloudinaryFile[] = req.files as CloudinaryFile[];
   if (!file && files.length < 1) {
-   console.log("No file uploaded");
    
     return next();
   }
 
   if (file) {
-   console.log("File uploaded");
+    console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET)
    
     return uploadSingle(file, res, next);
   } else {
-   console.log(req.files);
+    console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET)
    
-   console.log("Multiple files uploaded");
 
     return uploadMultiple(files, res, next);
   }
