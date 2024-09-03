@@ -71,7 +71,7 @@ const uploadMultiple = async (
 
           if (cloudinaryUrls.length === files.length) {
             //All files processed now get your images here
-            res.locals.image = cloudinaryUrls;
+            res.locals.images = cloudinaryUrls;
             next();
           }
         }
