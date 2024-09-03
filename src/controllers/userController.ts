@@ -35,12 +35,16 @@ export const findUserbyusername = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     try {
-        if (res.locals.image) {
-            if ('profil_pic' in res.locals.image) {
-                req.body.profil_pic = (res.locals.image['profil_pic'] );
+        if (res.locals.banner_pic || res.locals.profil_pic) {
+            if (res.locals.banner_pic && res.locals.profil_pic) {
+                req.body.banner_pic = (res.locals.banner_pic);
+                req.body.profil_pic = (res.locals.profil_pic);
             }
-            if ('banner_pic' in res.locals.image) {
-                req.body.banner_pic = (res.locals.image['banner_pic']);
+            if (res.locals.profil_pic) {
+                req.body.profil_pic = (res.locals.profil_pic);
+            }
+            if (res.locals.banner_pic) {
+                req.body.banner_pic = (res.locals.banner_pic);
             }
         }
 

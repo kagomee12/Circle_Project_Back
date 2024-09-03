@@ -4,7 +4,6 @@ import {
   UploadApiErrorResponse,
 } from "cloudinary";
 import { NextFunction, Request, Response } from "express";
-import { env } from "process";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -25,20 +24,23 @@ console.log( req?.files, req?.file);
 
   const file: CloudinaryFile = req.file as CloudinaryFile;
   const files: CloudinaryFile[] = req.files as CloudinaryFile[];
-  if (!file && files.length < 1) {
+  const profil_pic: CloudinaryFile = req.file as CloudinaryFile;
+  const banner_pic: CloudinaryFile = req.file as CloudinaryFile;
+  if (!file && files.length < 1 && !profil_pic && !banner_pic) {
    
     return next();
   }
 
   if (file) {
-    console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET)
-   
     return uploadSingle(file, res, next) ;
-  } else {
-    console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET)
-   
-
+  } else if(files) {
     return uploadMultiple(files, res, next);
+  }else if(profil_pic && !banner_pic) {
+    return uploadProfil(profil_pic, res, next);
+  } else if(banner_pic && !profil_pic) {
+    return uploadbanner(banner_pic, res, next);
+  }else if (profil_pic && banner_pic) {
+    return (uploadProfil(profil_pic, res, next), uploadbanner(banner_pic, res, next));
   }
 };
 
@@ -70,7 +72,6 @@ const uploadMultiple = async (
           cloudinaryUrls.push(result.secure_url);
 
           if (cloudinaryUrls.length === files.length) {
-            //All files processed now get your images here
             res.locals.images = cloudinaryUrls;
             next();
           }
@@ -107,12 +108,73 @@ const uploadSingle = async (
           console.error("Cloudinary upload error: Result is undefined");
           return res.send("Error uploading image");
         }
-
-        //All files processed now get your images here
-
-        // res.send(body);
-
         res.locals.image = result.secure_url;
+        next();
+      }
+    );
+    uploadStream.end(file.buffer);
+  } catch (error) {
+    console.log("Error in uploadToCloudinary middleware:", error);
+    res.send("Error uploading image");
+  }
+};
+const uploadProfil = async (
+  file: CloudinaryFile,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: "auto",
+        folder: "circle",
+      } as any,
+      (
+        err: UploadApiErrorResponse | undefined,
+        result: UploadApiResponse | undefined
+      ) => {
+        if (err) {
+          console.error("Cloudinary upload error:", err);
+          return res.send("Error uploading image");
+        }
+        if (!result) {
+          console.error("Cloudinary upload error: Result is undefined");
+          return res.send("Error uploading image");
+        }
+        res.locals.profil_pic = result.secure_url;
+        next();
+      }
+    );
+    uploadStream.end(file.buffer);
+  } catch (error) {
+    console.log("Error in uploadToCloudinary middleware:", error);
+    res.send("Error uploading image");
+  }
+};
+const uploadbanner = async (
+  file: CloudinaryFile,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: "auto",
+        folder: "circle",
+      } as any,
+      (
+        err: UploadApiErrorResponse | undefined,
+        result: UploadApiResponse | undefined
+      ) => {
+        if (err) {
+          console.error("Cloudinary upload error:", err);
+          return res.send("Error uploading image");
+        }
+        if (!result) {
+          console.error("Cloudinary upload error: Result is undefined");
+          return res.send("Error uploading image");
+        }
+        res.locals.banner_pic = result.secure_url;
         next();
       }
     );
