@@ -21,7 +21,7 @@ export const uploadCloudinary = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET);
+console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET);
 
   const file: CloudinaryFile = req.file as CloudinaryFile;
   const files: CloudinaryFile[] = req.files as CloudinaryFile[];
@@ -33,7 +33,7 @@ export const uploadCloudinary = async (
   if (file) {
     console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET)
    
-    return uploadSingle(file, res, next);
+    return uploadSingle(file, res, next) ;
   } else {
     console.log( process.env.CLOUDINARY_NAME, process.env.CLOUDINARY_API_KEY, process.env.CLOUDINARY_SECRET)
    
