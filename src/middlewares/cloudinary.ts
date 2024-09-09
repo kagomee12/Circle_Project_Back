@@ -20,28 +20,29 @@ export const uploadCloudinary = async (
   res: Response,
   next: NextFunction
 ) => {
-console.log( req?.files, req?.file);
+
+  console.log("loading");
+  
 
   const file: CloudinaryFile = req.file as CloudinaryFile;
   const files: CloudinaryFile[] = req.files as CloudinaryFile[];
-  const profil_pic: CloudinaryFile = req.file as CloudinaryFile;
-  const banner_pic: CloudinaryFile = req.file as CloudinaryFile;
-  if (!file && files.length < 1 && !profil_pic && !banner_pic) {
+  // const profil_pic: CloudinaryFile = req.file as CloudinaryFile;
+  // const banner_pic: CloudinaryFile = req.file as CloudinaryFile;
+  if (!file && files?.length < 1  ) {
    
     return next();
   }
-
+ console.log("loaded");
+ 
   if (file) {
     return uploadSingle(file, res, next) ;
   } else if(files) {
     return uploadMultiple(files, res, next);
-  }else if(profil_pic && !banner_pic) {
-    return uploadProfil(profil_pic, res, next);
-  } else if(banner_pic && !profil_pic) {
-    return uploadbanner(banner_pic, res, next);
-  }else if (profil_pic && banner_pic) {
-    return (uploadProfil(profil_pic, res, next), uploadbanner(banner_pic, res, next));
   }
+
+  console.log("hu tao");
+  
+  return next();
 };
 
 const uploadMultiple = async (
@@ -118,69 +119,69 @@ const uploadSingle = async (
     res.send("Error uploading image");
   }
 };
-const uploadProfil = async (
-  file: CloudinaryFile,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        resource_type: "auto",
-        folder: "circle",
-      } as any,
-      (
-        err: UploadApiErrorResponse | undefined,
-        result: UploadApiResponse | undefined
-      ) => {
-        if (err) {
-          console.error("Cloudinary upload error:", err);
-          return res.send("Error uploading image");
-        }
-        if (!result) {
-          console.error("Cloudinary upload error: Result is undefined");
-          return res.send("Error uploading image");
-        }
-        res.locals.profil_pic = result.secure_url;
-        next();
-      }
-    );
-    uploadStream.end(file.buffer);
-  } catch (error) {
-    console.log("Error in uploadToCloudinary middleware:", error);
-    res.send("Error uploading image");
-  }
-};
-const uploadbanner = async (
-  file: CloudinaryFile,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        resource_type: "auto",
-        folder: "circle",
-      } as any,
-      (
-        err: UploadApiErrorResponse | undefined,
-        result: UploadApiResponse | undefined
-      ) => {
-        if (err) {
-          console.error("Cloudinary upload error:", err);
-          return res.send("Error uploading image");
-        }
-        if (!result) {
-          console.error("Cloudinary upload error: Result is undefined");
-          return res.send("Error uploading image");
-        }
-        res.locals.banner_pic = result.secure_url;
-        next();
-      }
-    );
-    uploadStream.end(file.buffer);
-  } catch (error) {
-    console.log("Error in uploadToCloudinary middleware:", error);
-    res.send("Error uploading image");
-  }
-};
+// const uploadProfil = async (
+//   file: CloudinaryFile,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const uploadStream = cloudinary.uploader.upload_stream(
+//       {
+//         resource_type: "auto",
+//         folder: "circle",
+//       } as any,
+//       (
+//         err: UploadApiErrorResponse | undefined,
+//         result: UploadApiResponse | undefined
+//       ) => {
+//         if (err) {
+//           console.error("Cloudinary upload error:", err);
+//           return res.send("Error uploading image");
+//         }
+//         if (!result) {
+//           console.error("Cloudinary upload error: Result is undefined");
+//           return res.send("Error uploading image");
+//         }
+//         res.locals.profil_pic = result.secure_url;
+//         next();
+//       }
+//     );
+//     uploadStream.end(file.buffer);
+//   } catch (error) {
+//     console.log("Error in uploadToCloudinary middleware:", error);
+//     res.send("Error uploading image");
+//   }
+// };
+// const uploadbanner = async (
+//   file: CloudinaryFile,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const uploadStream = cloudinary.uploader.upload_stream(
+//       {
+//         resource_type: "auto",
+//         folder: "circle",
+//       } as any,
+//       (
+//         err: UploadApiErrorResponse | undefined,
+//         result: UploadApiResponse | undefined
+//       ) => {
+//         if (err) {
+//           console.error("Cloudinary upload error:", err);
+//           return res.send("Error uploading image");
+//         }
+//         if (!result) {
+//           console.error("Cloudinary upload error: Result is undefined");
+//           return res.send("Error uploading image");
+//         }
+//         res.locals.banner_pic = result.secure_url;
+//         next();
+//       }
+//     );
+//     uploadStream.end(file.buffer);
+//   } catch (error) {
+//     console.log("Error in uploadToCloudinary middleware:", error);
+//     res.send("Error uploading image");
+//   }
+// };

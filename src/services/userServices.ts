@@ -50,12 +50,8 @@ export const getUserByusername = async (username: string) => {
 }
 
 export const updateUser = async (id: number, data: User) => {
-    return await db.user.update({data: {
-        banner_pic: data.banner_pic,
-        profil_pic: data.profil_pic,
-        fullName: data.fullName,
-        username: data.username,
-        bio: data.bio
-    } ,where: { id } });
+    
+    const updateduser = await db.user.update({data: data ,where: { id } });
+    return updateduser
 }
 
