@@ -22,14 +22,11 @@ export const login = async (email: string, password: string) => {
         })
         if (!existedUser) {
             return null
-            
         }
-        
         const isMatch = await bcrypt.compare(password, existedUser.password)
         if (!isMatch) {
             return null
         }
-
         const token = jwt.sign(existedUser, process.env.SECRETKEY || "merdekaataumati", {
             expiresIn: '1d'
         }) 

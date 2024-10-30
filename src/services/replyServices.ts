@@ -18,6 +18,7 @@ export const findAll = async (id: number) => {
         },
         comments: true,
         images: true,
+        likes: true
       },
     });
   } catch (error) {

@@ -49,7 +49,13 @@ export const findById = async (id: number) => {
             likes: true,
           },
         },
-        comments: true,
+        comments: {
+          include: {
+            author: { select: { id: true, username: true } },
+            comments: true,
+            likes: true,
+          },
+        },
         images: true,
       },
     });

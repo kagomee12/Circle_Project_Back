@@ -5,7 +5,7 @@ import authorization from "../middlewares/authorization";
 const authRoutes = Router();
 
 authRoutes.post("/login", authContorller.login);
-authRoutes.post("/Register", authContorller.register);
+authRoutes.post("/register", authContorller.register);
 authRoutes.get("/me", authorization, authContorller.checkAuth)
 
 export default authRoutes;
