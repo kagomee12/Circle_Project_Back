@@ -1,70 +1,89 @@
 import { PostModels } from "../models/PostModels";
 import db from "../libs/db";
-import { Posts } from "@prisma/client";
 import { IPosts } from "../types/post";
 
-const posts: PostModels[] = [];
-
 export const findAll = async (id: number) => {
-   return await db.posts.findMany({
+  try {
+    return await db.posts.findMany({
       where: { parent_id: id },
       include: {
-         author: {
-            select: {
-               id: true,
-               username: true,
-               fullName: true,
-               profil_pic: true,
-               likes: true,
-               
-            },
-         },
-         comments: true,
-         images: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+            fullName: true,
+            profil_pic: true,
+            likes: true,
+          },
+        },
+        comments: true,
+        images: true,
       },
-   });
+    });
+  } catch (error) {
+    console.error("Error in findAll:", error);
+    throw error;
+  }
 };
 
 export const findById = async (id: number) => {
-   return await db.posts.findFirst({
+  try {
+    return await db.posts.findFirst({
       where: { id },
       include: {
-         author: {
-            select: {
-               id: true,
-               username: true,
-               profil_pic: true,
-            },
-         },
+        author: {
+          select: {
+            id: true,
+            username: true,
+            profil_pic: true,
+          },
+        },
       },
-   });
+    });
+  } catch (error) {
+    console.error("Error in findById:", error);
+    throw error;
+  }
 };
 
 export const create = async (post: IPosts) => {
-   const newPost = await db.posts.create({
+  try {
+    const newPost = await db.posts.create({
       data: {
-         ...post,
-         
-         images: {
-            create: post.images && post.images.map((image) => ({ image: image })),
-         },
-         
+        ...post,
+        images: {
+          create: post.images && post.images.map((image) => ({ image: image })),
+        },
       },
-   });
+    });
 
-   return newPost;
+    return newPost;
+  } catch (error) {
+    console.error("Error in create:", error);
+    throw error;
+  }
 };
 
 export const update = async (id: number, post: PostModels) => {
-   const updatedPost = await db.posts.update({
+  try {
+    const updatedPost = await db.posts.update({
       data: post,
       where: { id },
-   });
+    });
 
-   return updatedPost;
+    return updatedPost;
+  } catch (error) {
+    console.error("Error in update:", error);
+    throw error;
+  }
 };
 
 export const remove = async (id: number) => {
-   await db.posts.delete({ where: { id } });
-   return "deleted";
+  try {
+    await db.posts.delete({ where: { id } });
+    return "deleted";
+  } catch (error) {
+    console.error("Error in remove:", error);
+    throw error;
+  }
 };
