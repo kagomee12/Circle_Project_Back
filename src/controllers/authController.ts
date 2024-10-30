@@ -9,7 +9,7 @@ export const login = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(401).json({ message: "Invalid username or password" });
         }
-        return res.status(200).json({ message: "Login successful", user });
+        return res.status(200).json({ message: "Login successful", data: user });
     } catch (error) {
         throw error;
     }
@@ -19,7 +19,7 @@ export const register = async (req: Request, res: Response) => {
     try {
         const body = req.body;
         const user = await authservices.register(body as IUser);
-        return res.status(201).json({ message: "Registration successful", user });
+        return res.status(201).json({ message: "Registration successful", data: user });
     } catch (error) {
         throw error;
     }

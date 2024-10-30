@@ -2,62 +2,94 @@ import { createPostSchema } from "../libs/validations/post";
 import * as replyService from "../services/replyServices";
 import { Request, Response } from "express";
 import errorHandler from "../utils/errorHandler";
-import { log } from "console";
 
 export const findAll = async (req: Request, res: Response) => {
-   const {id} = req.params
-   const parent_id = parseInt(id)
-   const posts = await replyService.findAll(parent_id);
-   const get = posts.length
-   res.json({posts, get});
+  try {
+    const { id } = req.params;
+    const parent_id = parseInt(id);
+    const replies = await replyService.findAll(parent_id);
+    const count = replies.length;
+    res.status(200).json({
+      message: "Replies retrieved successfully",
+      totalReplies: count,
+      data: replies,
+    });
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
 };
 
 export const countById = async (req: Request, res: Response) => {
-   const {id} = req.params
-   const parent_id = parseInt(id)
-   const posts = await replyService.findAll(parent_id);
-   const get = posts.length
-   res.json({get});
+  try {
+    const { id } = req.params;
+    const parent_id = parseInt(id);
+    const replies = await replyService.findAll(parent_id);
+    const count = replies.length;
+    res.status(200).json({
+      message: "Count retrieved successfully",
+      totalReplies: count,
+    });
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
 };
 
 export const create = async (req: Request, res: Response) => {
-   try {
+  try {
+    await createPostSchema.validateAsync(req.body);
 
-      await createPostSchema.validateAsync(req.body);
-      
-      if (req.files) {
-         req.body.images = req.files;
-      }
+    if (req.files) {
+      req.body.images = req.files;
+    }
 
-      const post_id = parseInt(req.params.post_id);
-      const user_id = res.locals.user.id;
-      req.body.user_id = user_id;
-      req.body.parent_id = post_id;
+    const post_id = parseInt(req.params.post_id);
+    const user_id = res.locals.user.id;
+    req.body.user_id = user_id;
+    req.body.parent_id = post_id;
 
-
-
-      const post = await replyService.create(req.body);
-      res.json({
-         message: "Post created successfully",
-         data: post,
-      });
-   } catch (error) {
-      errorHandler(res, error as unknown as Error);
-   }
+    const newReply = await replyService.create(req.body);
+    res.status(201).json({
+      message: "Reply created successfully",
+      data: newReply,
+    });
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
 };
 
-export const update = (req: Request, res: Response) => {
-   const post = replyService.update(parseInt(req.params.id), req.body);
-   res.json(post);
+export const update = async (req: Request, res: Response) => {
+  try {
+    const updatedReply = await replyService.update(
+      parseInt(req.params.id),
+      req.body
+    );
+    if (!updatedReply) {
+      return res
+        .status(404)
+        .json({ message: "Reply not found or update failed" });
+    }
+    res.status(200).json({
+      message: "Reply updated successfully",
+      data: updatedReply,
+    });
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
 };
 
 export const remove = async (req: Request, res: Response) => {
-   try {
-
-      const post = await replyService.remove(parseInt(req.params.id));
-
-   res.json(post);
-   } catch (error) {
-      errorHandler(res, error as unknown as Error);
-   }
+  try {
+    const deletedReply = await replyService.remove(parseInt(req.params.id));
+    if (!deletedReply) {
+      return res
+        .status(404)
+        .json({ message: "Reply not found or deletion failed" });
+    }
+    res.status(200).json({
+      message: "Reply deleted successfully",
+      data: deletedReply,
+    });
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
 };
